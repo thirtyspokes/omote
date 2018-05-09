@@ -84,7 +84,7 @@ class Collections
             return true;
         }
 
-        foreach($coll as $element) {
+        foreach ($coll as $element) {
             if (!$f($element)) {
                 return false;
             }
@@ -121,6 +121,19 @@ class Collections
         return array_filter($coll, $f, ARRAY_FILTER_USE_BOTH);
     }
 
+    /**
+     * Returns an array composed of the results of successively applying
+     * function $f to the members of the supplied collections.  If the collection
+     * arguments are not all the same length, will only consume values up to the length
+     * of the shortest collection.
+     *
+     * The function supplied as $f should have an arity equal to the number of collections
+     * supplied as $coll - i.e., the callable should accept three arguments if three collections
+     * are to be mapped over.
+     *
+     * @param callable $f The function to apply to the collections.
+     * @param array    $coll,... The collections to be mapped over.
+     */
     public static function map($f, array ...$coll) : array
     {
         if (!is_callable($f)) {
@@ -132,10 +145,23 @@ class Collections
             return [];
         }
 
+        // map should only consume as many items from the source arrays
+        // as are present in the shortest member.
+        $inputs = [];
+        $shortest = count($coll[0]);
 
+        foreach ($coll as $element) {
+            if (count($element) < $shortest) {
+                $shortest = count($element);
+            }
+        }
+
+        foreach ($coll as $element) {
+            $inputs[] = self::take($shortest, $element);
+        }
 
         $args = [$f];
-        $args = array_merge($args, $coll);
+        $args = array_merge($args, $inputs);
         return call_user_func_array("array_map", $args);
     }
 }

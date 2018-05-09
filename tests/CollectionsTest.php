@@ -96,4 +96,20 @@ final class CollectionsTest extends TestCase
 
         $this->assertEquals(array_map($f, $a, $b, $c), Collections::map($f, $a, $b, $c));
     }
+
+    public function testMapConsumesUpToShortestInput()
+    {
+        $a = [1, 1, 1, 1, 1];
+        $b = [1, 1, 1, 1, 1];
+        $c = [1, 1, 1];
+
+        $add = function ($x, $y, $z) {
+            return $x + $y + $z;
+        };
+
+        $this->assertEquals([3, 3, 3], Collections::map($add, $a, $b, $c));
+        $this->assertEquals([1, 1, 1, 1, 1], $a);
+        $this->assertEquals([1, 1, 1, 1, 1], $b);
+        $this->assertEquals([1, 1, 1], $c);
+    }
 }
