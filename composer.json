@@ -1,0 +1,19 @@
+{
+    "name": "thirtyspokes/omote",
+    "description": "A veneer that makes PHP somewhat more consistent",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ray Ashman Jr.",
+            "email": "ray@rayashmanjr.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^7.1"
+    },
+    "autoload": {
+      "psr-4": { "Omote\\": "src/" }
+    }
+}
